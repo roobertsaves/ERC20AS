@@ -5,7 +5,7 @@
   </ul>
 </div>
 
-This project demonstrates a basic ERC20 token use case. It comes with a special modifier for the transfer and transferFrom functionality. The modifier "onlyOncePerBlock(address)" will make a token sender only be able to send a transfer transaction once per block. A sandwich (front- & backrun within one block) isn't possible anymore. Although a single frontrun or a backrun will still be possible.
+This project demonstrates a basic ERC20 token use case. It comes with a special modifier for the transfer and transferFrom functionality. The modifier "onlyOncePerBlock(address,address)" will make a token sender only be able to send a transfer transaction once per block. A sandwich (front- & backrun within one block) isn't possible anymore. Although a single frontrun or a backrun will still be possible.
 
 ### Magic modifier
 ```solidity
@@ -30,7 +30,7 @@ modifier onlyOncePerBlock(address _from, address _to) {
 ...
 ...
 ...
-function _beforeTokenTransfer(address from, address to, uint256 amount) internal whenNotPaused onlyOncePerBlock(from) override {
+function _beforeTokenTransfer(address from, address to, uint256 amount) internal whenNotPaused onlyOncePerBlock(from,to) override {
     super._beforeTokenTransfer(from, to, amount);
 }
 ```
