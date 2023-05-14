@@ -1,10 +1,10 @@
 <style>
-h1, h2, h3, h4, h5, h6 {
-    margin: 0;
-}
+    h1, h2, h3, h4, h5, h6 {
+        margin: 0;
+    }
 </style>
-# ERC20AntiSandwich
-## Never get jared again.
+<h1>ERC20AntiSandwich</h1>
+<h2>Never get jared again.</h2>
 
 This project demonstrates a basic ERC20 token use case. It comes with a special modifier for the transfer and transferFrom functionality. The modifier "onlyOncePerBlock(address)" will make a token sender only be able to send a transfer transaction once per block. A sandwich (front- & backrun within one block) isn't possible anymore. Although a single frontrun or a backrun will still be possible.
 
