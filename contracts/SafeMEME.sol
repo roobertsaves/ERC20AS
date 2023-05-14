@@ -220,9 +220,14 @@ contract SafeMEME is ERC20 {
     *       -- if _from is not an exception
     */
 
-    modifier onlyOncePerBlock(address _from) {
+    modifier onlyOncePerBlock(address _from, address _to) {
         if (!exceptions[_from]) {
             bytes32 key = keccak256(abi.encodePacked(block.number, _from));
+            require(!perBlock[key], "ERC20: Only one transfer per block per address");
+            perBlock[key] = true;
+        }
+        if (!exceptions[_to]) {
+            bytes32 key = keccak256(abi.encodePacked(block.number, _to));
             require(!perBlock[key], "ERC20: Only one transfer per block per address");
             perBlock[key] = true;
         }
@@ -260,7 +265,7 @@ contract SafeMEME is ERC20 {
         paused = pause;
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 amount) internal whenNotPaused onlyOncePerBlock(from) override {
+    function _beforeTokenTransfer(address from, address to, uint256 amount) internal whenNotPaused onlyOncePerBlock(from,to) override {
         super._beforeTokenTransfer(from, to, amount);
     }
 }
