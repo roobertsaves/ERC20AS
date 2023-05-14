@@ -50,5 +50,5 @@ function _beforeTokenTransfer(address from, address to, uint256 amount) internal
 ### Todo's
 
 - [X] Create a working ERC20 boiler plate
-- [] Optimize modifier onlyOncePerBlock for gas (currently: 103.165)
-- [] Implement a version without the need of modifying the statea
+- [ ] Optimize modifier onlyOncePerBlock for gas (currently a transfer costs 103.165)
+- [ ] Implement a version without the need of modifying the state (removing mapping exceptions)
