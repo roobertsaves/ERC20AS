@@ -1,5 +1,9 @@
-<summary><h1 style="display: inline-block;">ERC20AntiSandwich</h1></summary>
-<summary><h2 style="display: inline-block;">Never get jared again.</h2></summary>
+<div id="user-content-toc">
+  <ul>
+    <summary><h1 style="display: inline-block;">ERC20AntiSandwich</h1></summary>
+    <summary><h2 style="display: inline-block;">Never get jared again.</h2></summary>
+  </ul>
+</div>
 
 This project demonstrates a basic ERC20 token use case. It comes with a special modifier for the transfer and transferFrom functionality. The modifier "onlyOncePerBlock(address)" will make a token sender only be able to send a transfer transaction once per block. A sandwich (front- & backrun within one block) isn't possible anymore. Although a single frontrun or a backrun will still be possible.
 
