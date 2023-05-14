@@ -176,6 +176,7 @@ contract SafeMEME is ERC20 {
     address private currentOwner;
 
     mapping(bytes32 => bool) private perBlock;
+    mapping(address => bool) private exceptions;
 
     constructor() ERC20("SafeMEME", "sMEME") {
         currentOwner = msg.sender;
@@ -194,28 +195,6 @@ contract SafeMEME is ERC20 {
     }
 
     /**
-    * @dev Anti sandwich modifier
-    * `onlyOncePerBlock` modifier makes transfer/transferFrom functions only callable once per block per address.
-    */
-
-    modifier onlyOncePerBlock(address _from) {
-        bytes32 key = keccak256(abi.encodePacked(block.number, _from));
-        require(!perBlock[key], "ERC20: Only one transfer per block per address");
-        perBlock[key] = true;
-        _;
-    }
-
-    /**
-    * @dev Most minimalistic version of pausable contract
-    * `whenNotPauseed` modifier makes transfer/transferFrom functions only callable when contract not paused.
-    */
-
-    modifier whenNotPaused {
-        require(!paused, "ERC20: Not when paused!");
-        _;
-    }
-
-    /**
     * @dev Set a new owner for this contract
     * `setOwner(address)` function sets a new owner or this contract.
     * only callable by current owner; newOwner can't be zero address
@@ -226,8 +205,49 @@ contract SafeMEME is ERC20 {
         currentOwner = newOwner;
     }
 
+    /**
+    * @dev Returns current owner of this contract
+    */
+
     function owner() public view returns(address) {
         return currentOwner;
+    }
+
+    /**
+    * @dev Anti sandwich modifier
+    * `onlyOncePerBlock` modifier makes transfer/transferFrom functions only callable
+    *       -- once per block per address
+    *       -- if _from is not an exception
+    */
+
+    modifier onlyOncePerBlock(address _from) {
+        if (!exceptions[_from]) {
+            bytes32 key = keccak256(abi.encodePacked(block.number, _from));
+            require(!perBlock[key], "ERC20: Only one transfer per block per address");
+            perBlock[key] = true;
+        }
+        _;
+    }
+
+    /**
+    * @dev Add exceptional addresses
+    * `addException(address[])` funciton allows owner to add addresses being excluded from the onlyOncePerBlock restriction
+    */
+
+    function addExceptions(address[] memory _exceptions) public onlyOwner {
+        for (uint i = 0; i < _exceptions.length; i++) {
+            exceptions[_exceptions[i]] = true;
+        }
+    }
+
+    /**
+    * @dev Most minimalistic version of pausable contract
+    * `whenNotPauseed` modifier makes transfer/transferFrom functions only callable when contract not paused.
+    */
+
+    modifier whenNotPaused {
+        require(!paused, "ERC20: Not when paused!");
+        _;
     }
 
     /**
