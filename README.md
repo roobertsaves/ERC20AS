@@ -10,9 +10,11 @@ mapping(bytes32 => bool) private perBlock;
 ...
 ...
 modifier onlyOncePerBlock(address _from) {
-    bytes32 key = keccak256(abi.encodePacked(block.number, _from));
-    require(!perBlock[key], "ERC20: Only one transfer per block per address");
-    perBlock[key] = true;
+    if (!exceptions[_from]) {
+        bytes32 key = keccak256(abi.encodePacked(block.number, _from));
+        require(!perBlock[key], "ERC20: Only one transfer per block per address");
+        perBlock[key] = true;
+    }
     _;
 }
 ...
