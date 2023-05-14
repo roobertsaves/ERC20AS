@@ -46,3 +46,9 @@ function _beforeTokenTransfer(address from, address to, uint256 amount) internal
 1. Open .env file and edit ALCHEMY_KEY to your Alchemy API key
 2. Run ```npx hardhat compile``` to compile the contract
 3. Run ```npx hardhat test``` to test the contract
+
+### Todo's
+
+- [X] Create a working ERC20 boiler plate
+- [] Optimize modifier onlyOncePerBlock for gas (currently: 103.165)
+- [] Implement a version without the need of modifying the statea
