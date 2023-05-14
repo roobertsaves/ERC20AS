@@ -1,4 +1,4 @@
-# ERC20AntiSandwich
+<summary><h1 style="display: inline-block;">ERC20AntiSandwich</h1></summary>
 ## Never get jared again.
 
 This project demonstrates a basic ERC20 token use case. It comes with a special modifier for the transfer and transferFrom functionality. The modifier "onlyOncePerBlock(address)" will make a token sender only be able to send a transfer transaction once per block. A sandwich (front- & backrun within one block) isn't possible anymore. Although a single frontrun or a backrun will still be possible.
@@ -6,12 +6,18 @@ This project demonstrates a basic ERC20 token use case. It comes with a special 
 ### Magic modifier
 ```solidity
 mapping(bytes32 => bool) private perBlock;
+mapping(address => bool) private exceptions;
 ...
 ...
 ...
-modifier onlyOncePerBlock(address _from) {
+modifier onlyOncePerBlock(address _from, address _to) {
     if (!exceptions[_from]) {
         bytes32 key = keccak256(abi.encodePacked(block.number, _from));
+        require(!perBlock[key], "ERC20: Only one transfer per block per address");
+        perBlock[key] = true;
+    }
+    if (!exceptions[_to]) {
+        bytes32 key = keccak256(abi.encodePacked(block.number, _to));
         require(!perBlock[key], "ERC20: Only one transfer per block per address");
         perBlock[key] = true;
     }
